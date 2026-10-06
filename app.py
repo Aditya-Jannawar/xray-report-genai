@@ -5,9 +5,12 @@ import json
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_file
 from groq import Groq
 from PIL import Image, UnidentifiedImageError
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import simpleSplit
+from reportlab.pdfgen import canvas
 
 load_dotenv()
 app = Flask(__name__)
@@ -19,6 +22,52 @@ client = Groq(api_key=api_key) if api_key else None
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.post("/download-report/pdf")
+def download_report_pdf():
+    """Build a simple PDF from the structured report currently shown in the UI."""
+    payload = request.get_json(silent=True) or {}
+    report = payload.get("report")
+    if not isinstance(report, dict) or not all(
+        isinstance(report.get(section), list)
+        and all(isinstance(item, str) for item in report[section])
+        for section in ("findings", "impression")
+    ):
+        return jsonify(success=False, error="A valid generated report is required to download a PDF."), 400
+
+    pdf_buffer = io.BytesIO()
+    document = canvas.Canvas(pdf_buffer, pagesize=letter)
+    page_width, page_height = letter
+    left_margin = 54
+    y_position = page_height - 58
+
+    def draw_wrapped(text, font_name, font_size, line_height):
+        nonlocal y_position
+        document.setFont(font_name, font_size)
+        for line in simpleSplit(text, font_name, font_size, page_width - 2 * left_margin):
+            if y_position < 58:
+                document.showPage()
+                y_position = page_height - 58
+                document.setFont(font_name, font_size)
+            document.drawString(left_margin, y_position, line)
+            y_position -= line_height
+
+    draw_wrapped("AI-Based Chest X-Ray Report", "Helvetica-Bold", 16, 25)
+    for heading, section in (("Findings", "findings"), ("Impression", "impression")):
+        draw_wrapped(heading, "Helvetica-Bold", 12, 19)
+        items = report[section] or ["No content provided."]
+        for item in items:
+            draw_wrapped(f"•  {item}", "Helvetica", 10, 15)
+        y_position -= 9
+    y_position -= 6
+    draw_wrapped(
+        "Educational/research prototype only. AI-generated reports are not medically validated and must not be used for clinical decision-making.",
+        "Helvetica-Oblique", 9, 13,
+    )
+    document.save()
+    pdf_buffer.seek(0)
+    return send_file(pdf_buffer, mimetype="application/pdf", as_attachment=True, download_name="xray-report.pdf")
 
 
 @app.post("/generate-report")

@@ -22,8 +22,14 @@
       </section>
       <section class="card report-card" aria-labelledby="report-heading">
         <div class="card-heading"><span class="step">02</span><div><h2 id="report-heading">Generated report</h2><p>AI drafted text for educational review.</p></div></div>
-        <div class="loading-state" id="loading-indicator" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><span>Analyzing X-ray...</span></div>
+        <div class="loading-state" id="loading-indicator" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><span id="loading-text">Analyzing X-ray...</span></div>
         <div class="error-message" id="error-message" role="alert" hidden></div>
+        <div class="report-actions" id="report-actions" hidden>
+          <button class="button button-secondary action-button" id="copy-button" type="button">Copy Report</button>
+          <details class="download-menu"><summary class="button button-secondary action-button">Download</summary><div class="download-options"><button type="button" id="download-txt-button">Download TXT</button><button type="button" id="download-pdf-button">Download PDF</button></div></details>
+          <button class="button button-primary action-button" id="generate-again-button" type="button">Generate Again</button>
+          <span class="copy-toast" id="copy-toast" role="status" aria-live="polite" hidden></span>
+        </div>
         <div class="report-content" id="report-output" aria-live="polite"><p class="report-empty" id="report-empty">Upload a chest X-ray and click Generate Report.</p><section class="report-section" id="findings-section" hidden><h3>Findings</h3><ul id="findings-output"></ul></section><section class="report-section" id="impression-section" hidden><h3>Impression</h3><ul id="impression-output"></ul></section></div>
         <p class="disclaimer"><span aria-hidden="true">ⓘ</span> This application is an educational and research-oriented prototype. AI-generated reports are not medically validated and must not be used for clinical diagnosis, treatment, or medical decision-making.</p>
       </section>
