@@ -95,7 +95,7 @@ def generate_report():
     mime_type = "image/png" if extension == "png" else "image/jpeg"
     image_url = f"data:{mime_type};base64,{base64.b64encode(image_bytes).decode('utf-8')}"
     try:
-        prompt = prompt = """You are a vision-language model being used in an educational and research-oriented prototype for chest X-ray report generation.
+        prompt = """You are a vision-language model being used in an educational and research-oriented prototype for chest X-ray report generation.
 
 Analyze ONLY the visual information present in the provided X-ray image.
 
