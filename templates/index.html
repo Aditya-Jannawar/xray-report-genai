@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Educational chest X-ray report generation prototype">
+  <title>AI-Based Chest X-Ray Report Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner"><div class="brand-mark" aria-hidden="true">XR</div><div><p class="eyebrow">VISION LANGUAGE RESEARCH</p><h1>AI-Based Chest X-Ray Report Generator</h1></div></div></header>
+  <main class="page-shell">
+    <section class="intro"><p class="subtitle">Research &amp; Educational Prototype</p><p>Upload a chest X-ray to generate an AI drafted description for research and learning.</p></section>
+    <div class="workspace">
+      <section class="card upload-card" aria-labelledby="upload-heading">
+        <div class="card-heading"><span class="step">01</span><div><h2 id="upload-heading">Upload image</h2><p>Select a JPG or PNG chest X-ray.</p></div></div>
+        <label class="file-picker" for="xray-image"><span class="upload-icon" aria-hidden="true">↑</span><strong>Choose an X-ray image</strong><span>JPG, JPEG, or PNG</span></label>
+        <input id="xray-image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+        <div class="preview-frame" id="preview-frame"><div class="preview-placeholder"><span aria-hidden="true">▧</span><p>Image preview will appear here</p></div><img id="image-preview" alt="Selected chest X-ray preview" hidden></div>
+        <div class="button-row"><button class="button button-primary" id="generate-button" type="button" disabled>Generate Report <span aria-hidden="true">→</span></button><button class="button button-secondary" id="clear-button" type="button">Clear</button></div>
+      </section>
+      <section class="card report-card" aria-labelledby="report-heading">
+        <div class="card-heading"><span class="step">02</span><div><h2 id="report-heading">Generated report</h2><p>AI drafted text for educational review.</p></div></div>
+        <div class="loading-state" id="loading-indicator" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><span>Analyzing X-ray...</span></div>
+        <div class="error-message" id="error-message" role="alert" hidden></div>
+        <div class="report-content" id="report-output" aria-live="polite"><p class="report-empty" id="report-empty">Upload a chest X-ray and click Generate Report.</p><section class="report-section" id="findings-section" hidden><h3>Findings</h3><ul id="findings-output"></ul></section><section class="report-section" id="impression-section" hidden><h3>Impression</h3><ul id="impression-output"></ul></section></div>
+        <p class="disclaimer"><span aria-hidden="true">ⓘ</span> This application is an educational and research-oriented prototype. AI-generated reports are not medically validated and must not be used for clinical diagnosis, treatment, or medical decision-making.</p>
+      </section>
+    </div><footer>Prototype for academic research and learning</footer>
+  </main>
+</body>
+</html>
